@@ -1,0 +1,72 @@
+{
+  "name": "abstract-iterator",
+  "version": "0.9.0",
+  "description": "add the iterator ability to abstract-nosql database.",
+  "homepage": "https://github.com/snowyu/node-abstract-iterator",
+  "main": "./index",
+  "files": [
+    "README.md",
+    "LICENSE-MIT",
+    "index.js",
+    "test",
+    "abstract",
+    "lib"
+  ],
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "abstract-object": "1.x",
+    "minimatch": "~2.0.1"
+  },
+  "devDependencies": {
+    "chai": "~1.10.0",
+    "coffee-script": "~1.8.0",
+    "connect-livereload": "*",
+    "grunt": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-mocha-test": "~0.12.4",
+    "grunt-newer": "*",
+    "grunt-release": "*",
+    "grunt-rev": "*",
+    "grunt-saucelabs": "*",
+    "grunt-usemin": "*",
+    "mocha": "~2.0.1",
+    "powerbuild": "latest",
+    "sinon": "~1.12.2",
+    "sinon-chai": "~2.6.0",
+    "source-map-support": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snowyu/node-abstract-iterator"
+  },
+  "keywords": [
+    "abstract",
+    "object",
+    "class",
+    "stream",
+    "nosql",
+    "iterator",
+    "database"
+  ],
+  "author": {
+    "name": "Riceball LEE",
+    "email": "snowyu.lee@gmail.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/snowyu/node-abstract-iterator/blob/master/LICENSE-MIT"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/snowyu/node-abstract-iterator/issues"
+  }
+}
