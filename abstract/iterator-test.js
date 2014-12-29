@@ -33,7 +33,7 @@ module.exports.args = function (test) {
     var iterator = db.iterator()
     t.throws(
         iterator.next.bind(iterator)
-      , { name: 'Error', message: 'next() requires a callback argument' }
+      , { name: 'InvalidArgumentError', message: 'next() requires a callback argument' }
       , 'no-arg iterator#next() throws'
     )
     iterator.end(t.end.bind(t))
@@ -44,7 +44,7 @@ module.exports.args = function (test) {
     iterator.next(function () {
       t.throws(
           iterator.end.bind(iterator)
-        , { name: 'Error', message: 'end() requires a callback argument' }
+        , { name: 'InvalidArgumentError', message: 'end() requires a callback argument' }
         , 'no-arg iterator#end() throws'
       )
       iterator.end(t.end.bind(t))
@@ -55,7 +55,7 @@ module.exports.args = function (test) {
     var iterator = db.iterator()
     t.throws(
         iterator.end.bind(iterator)
-      , { name: 'Error', message: 'end() requires a callback argument' }
+      , { name: 'InvalidArgumentError', message: 'end() requires a callback argument' }
       , 'no-arg iterator#end() throws'
     )
     iterator.end(t.end.bind(t))
@@ -69,7 +69,7 @@ module.exports.sequence = function (test) {
       t.error(err)
       iterator.end(function(err2) {
         t.ok(err2, 'returned error')
-        t.equal(err2.name, 'Error', 'correct error')
+        t.equal(err2.name, 'AlreadyEndError', 'correct error')
         t.equal(err2.message, 'end() already called on iterator')
         t.end()
       })
@@ -82,7 +82,7 @@ module.exports.sequence = function (test) {
       t.error(err)
       iterator.next(function(err2) {
         t.ok(err2, 'returned error')
-        t.equal(err2.name, 'Error', 'correct error')
+        t.equal(err2.name, 'AlreadyEndError', 'correct error')
         t.equal(err2.message, 'cannot call next() after end()', 'correct message')
         t.end()
       })
@@ -101,7 +101,7 @@ module.exports.sequence = function (test) {
 
     iterator.next(function(err) {
       t.ok(err, 'returned error')
-      t.equal(err.name, 'Error', 'correct error')
+      t.equal(err.name, 'AlreadyRunError', 'correct error')
       t.equal(err.message, 'cannot call next() before previous next() has completed')
     })
   })
