@@ -101,7 +101,7 @@ module.exports = class AbstractIterator
     @_indexOfKeys = -2
     @_ended = true
 
-  endSync: ->
+  freeSync: ->
     if @_indexOfKeys?
       return @_endKeys()
     else if @_endSync
@@ -109,6 +109,7 @@ module.exports = class AbstractIterator
       return @_endSync()
     else
       throw new NotImplementedError()
+  endSync: @::freeSync
 
   nextKeys: (callback) ->
     @_nexting = true
@@ -147,7 +148,7 @@ module.exports = class AbstractIterator
         callback.apply null, arguments
     @
 
-  end: (callback) ->
+  free: (callback) ->
     throw new InvalidArgumentError("end() requires a callback argument")  unless typeof callback is "function"
     return callback(new AlreadyEndError("end() already called on iterator"))  if @_ended
     if @_indexOfKeys?
@@ -156,3 +157,4 @@ module.exports = class AbstractIterator
     else
       @_ended = true
       @_end callback
+  end: @::free
