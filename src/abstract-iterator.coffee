@@ -1,8 +1,10 @@
 # Copyright (c) 2013 Rod Vagg, MIT License
 # Copyright (c) 2014 Riceball LEE, MIT License
+xtend                 = require("xtend")
 util                  = require("abstract-object/lib/util")
 inherits              = util.inherits
 isArray               = util.isArray
+isString              = util.isString
 Errors                = require('abstract-object/Error')
 AbstractError         = Errors.AbstractError
 NotImplementedError   = Errors.NotImplementedError
@@ -10,6 +12,7 @@ InvalidArgumentError  = Errors.InvalidArgumentError
 createError           = Errors.createError
 AlreadyEndError       = createError("AlreadyEnd", 0x53)
 AlreadyRunError       = createError("AlreadyRun", 0x54)
+isBuffer              = Buffer.isBuffer
 
 Errors.AlreadyEndError  = AlreadyEndError
 Errors.AlreadyRunError  = AlreadyRunError
@@ -19,9 +22,10 @@ module.exports = class AbstractIterator
   @AlreadyEndError: AlreadyEndError
   @AlreadyRunError: AlreadyRunError
 
-  constructor: (@db, @options) ->
+  constructor: (@db, options) ->
     @_ended = false
     @_nexting = false
+    @options = @initOptions(options)
 
     isKeysIterator = options and isArray options.range
     if isKeysIterator
@@ -30,6 +34,42 @@ module.exports = class AbstractIterator
 
     return not isKeysIterator
 
+  initOptions: (options)->
+    options = xtend(options)
+    self = this
+    ["start", "end", "gt", "gte", "lt", "lte"].forEach (o) ->
+      delete options[o]  if options[o] and isBuffer(options[o]) and options[o].length is 0
+    options.reverse = !!options.reverse
+
+    range = options.range
+    if isString(range)
+      range = range.trim()
+      if range.length >= 2
+        skipStart = if !options.reverse then range[0] is "(" else range[range.length-1] is ")"
+        skipEnd   = if !options.reverse then range[range.length-1] is ")" else range[0] is "("
+        range     = range.substring(1, range.length-1)
+        range     = range.split(",").map (item)->
+          item = item.trim()
+          item = null if item is ""
+          return item
+        if !options.reverse
+          [start,end] = range
+          startOp = 'gt'
+          endOp = 'lt'
+        else
+          [end, start] = range
+          startOp = 'lt'
+          endOp = 'gt'
+        startOp = startOp + 'e' unless skipStart
+        endOp = endOp + 'e' unless skipEnd
+        options[startOp] = start
+        options[endOp] = end
+    options.keys = options.keys isnt false
+    options.values = options.values isnt false
+    options.limit = (if "limit" of options then options.limit else -1)
+    options.keyAsBuffer = options.keyAsBuffer is true
+    options.valueAsBuffer = options.valueAsBuffer is true
+    options
   _next: (callback) ->
     self = this
     if @_nextSync
