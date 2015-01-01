@@ -1,3 +1,8 @@
+var consts = require('abstract-iterator/lib/consts')
+var FILTER_INCLUDED = consts.FILTER_INCLUDED
+var FILTER_EXCLUDED = consts.FILTER_EXCLUDED
+var FILTER_STOPPED  = consts.FILTER_STOPPED
+
 var db
   , sourceData = (function () {
       var d = []
@@ -210,6 +215,36 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
       t.error(err)
       t.equal(data.length, sourceData.length, 'correct number of entries')
       var expected = sourceData.slice().reverse().map(transformSource)
+      t.deepEqual(data, expected)
+      t.end()
+    })
+  })
+
+  test('test iterator with filter', function (t) {
+    var count = 0
+     function filter(k,v) {
+      if (k % 2 === 0) return FILTER_EXCLUDED
+      if (++count > 10) return FILTER_STOPPED
+    }
+    var it = db.iterator({ keyAsBuffer: false, valueAsBuffer: false, filter: filter })
+    collectEntries(it, function (err, data) {
+      t.error(err)
+      t.equal(data.length, count)
+      t.equal(count, 11, 'correct number of entries')
+      var expected = sourceData.slice(0, count*2).map(transformSource).filter(function(d){
+        return d.key % 2 === 1
+      })
+      t.deepEqual(data, expected)
+      t.end()
+    })
+  })
+
+  test('test iterator with match', function (t) {
+    var it = db.iterator({ keyAsBuffer: false, valueAsBuffer: false, match: "0*" })
+    collectEntries(it, function (err, data) {
+      t.error(err)
+      t.equal(data.length, 10, 'correct number of entries')
+      var expected = sourceData.slice(0, 10).map(transformSource)
       t.deepEqual(data, expected)
       t.end()
     })

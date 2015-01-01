@@ -1,11 +1,14 @@
 # Copyright (c) 2013 Rod Vagg, MIT License
 # Copyright (c) 2014 Riceball LEE, MIT License
 xtend                 = require("xtend")
+minimatch             = require('minimatch')
 util                  = require("abstract-object/lib/util")
+Errors                = require('abstract-object/Error')
+consts                = require('./consts')
 inherits              = util.inherits
 isArray               = util.isArray
 isString              = util.isString
-Errors                = require('abstract-object/Error')
+isFunction            = util.isFunction
 AbstractError         = Errors.AbstractError
 NotImplementedError   = Errors.NotImplementedError
 InvalidArgumentError  = Errors.InvalidArgumentError
@@ -13,6 +16,10 @@ createError           = Errors.createError
 AlreadyEndError       = createError("AlreadyEnd", 0x53)
 AlreadyRunError       = createError("AlreadyRun", 0x54)
 isBuffer              = Buffer.isBuffer
+
+FILTER_INCLUDED = consts.FILTER_INCLUDED
+FILTER_EXCLUDED = consts.FILTER_EXCLUDED
+FILTER_STOPPED  = consts.FILTER_STOPPED
 
 Errors.AlreadyEndError  = AlreadyEndError
 Errors.AlreadyRunError  = AlreadyRunError
@@ -26,6 +33,7 @@ module.exports = class AbstractIterator
     @_ended = false
     @_nexting = false
     @options = @initOptions(options)
+    options = @options
 
     isKeysIterator = options and isArray options.range
     if isKeysIterator
@@ -36,9 +44,6 @@ module.exports = class AbstractIterator
 
   initOptions: (options)->
     options = xtend(options)
-    self = this
-    ["start", "end", "gt", "gte", "lt", "lte"].forEach (o) ->
-      delete options[o]  if options[o] and isBuffer(options[o]) and options[o].length is 0
     options.reverse = !!options.reverse
 
     range = options.range
@@ -69,6 +74,22 @@ module.exports = class AbstractIterator
     options.limit = (if "limit" of options then options.limit else -1)
     options.keyAsBuffer = options.keyAsBuffer is true
     options.valueAsBuffer = options.valueAsBuffer is true
+    if options.next
+        if options.reverse isnt true
+          options.gt = options.next
+          options.gte= options.next
+        else
+          options.lt = options.next
+          options.lte= options.next
+    ["start", "end", "gt", "gte", "lt", "lte"].forEach (o) ->
+      if options[o] and isBuffer(options[o]) and options[o].length is 0
+        delete options[o]
+    if options.keys and isString(options.match) and options.match.length > 0
+      @match = (item)->
+        minimatch(item[0], options.match)
+    if isFunction(options.filter)
+      @filter = (item)->
+        options.filter item[0], item[1]
     options
   _next: (callback) ->
     self = this
@@ -119,18 +140,34 @@ module.exports = class AbstractIterator
     @_nexting = false
     return result
 
+  _isOk: (result)->
+    true
   nextSync: ->
     return throw new AlreadyEndError("cannot call next() after end()") if @_ended
     return throw new AlreadyRunError("cannot call next() before previous next() has completed") if @_nexting
+    return false if @_filterStopped
     if @_indexOfKeys?
       return @nextKeysSync()
     else if @_nextSync
       @_nexting = true
       result = @_nextSync()
       if result isnt false
+        if @filter then switch @filter(result)
+          when FILTER_EXCLUDED
+            # skip this and read the next.
+            @_nexting = false
+            @nextSync()
+            return
+          when FILTER_STOPPED #halt
+            @_filterStopped = true
+        if @match and not @match(result)
+          @_nexting = false
+          @nextSync()
+          return
         result =
           key: result[0]
           value: result[1]
+        @last = result[0]
       @_nexting = false
       return result
     else
@@ -178,13 +215,29 @@ module.exports = class AbstractIterator
     throw new InvalidArgumentError("next() requires a callback argument") unless typeof callback is "function"
     return callback(new AlreadyEndError("cannot call next() after end()")) if @_ended
     return callback(new AlreadyRunError("cannot call next() before previous next() has completed")) if @_nexting
+    return callback() if @_filterStopped
     if @_indexOfKeys?
       @nextKeys callback
     else
       @_nexting = true
       self = this
-      @_next ->
+      @_next (err, key, value)->
         self._nexting = false
+        if !err and (key? or value?)
+          result = [key, value]
+          if self.filter then switch self.filter(result)
+            when FILTER_EXCLUDED
+              # skip this and read the next.
+              self.next callback
+              return
+            when FILTER_STOPPED #halt
+              self._filterStopped = true
+          if self.match and not self.match(result)
+            self.next callback
+            return
+          key = result[0]
+          value = result[1]
+          self.last = result[0]
         callback.apply null, arguments
     @
 

@@ -581,6 +581,30 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
     })
   })
 
+  test('test iterator with limit=20 and next=19', function (t) {
+    var it = db.iterator({ keyAsBuffer: false, valueAsBuffer: false, next: '19', limit: 20 })
+    collectEntries(it, function (err, data) {
+      t.error(err)
+      t.equal(data.length, 20, 'correct number of entries')
+      var expected = sourceData.slice(20, 40).map(transformSource)
+      t.deepEqual(data, expected)
+      t.equal(it.last, expected.pop().key, 'correct last key')
+      t.end()
+    })
+  })
+
+  test('test iterator with limit=20 and next=80 and reverse=true', function (t) {
+    var it = db.iterator({ keyAsBuffer: false, valueAsBuffer: false, next: '80', limit: 20, reverse: true })
+    collectEntries(it, function (err, data) {
+      t.error(err)
+      t.equal(data.length, 20, 'correct number of entries')
+      var expected = sourceData.slice().reverse().slice(20, 40).map(transformSource)
+      t.deepEqual(data, expected)
+      t.equal(it.last, expected.pop().key, 'correct last key')
+      t.end()
+    })
+  })
+
   test('test iterator with limit=20 and gte=20', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, gte: '20', limit: 20 }), function (err, data) {
       t.error(err)
