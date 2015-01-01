@@ -1,6 +1,6 @@
 {
   "name": "abstract-iterator",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "add the iterator ability to abstract-nosql database.",
   "homepage": "https://github.com/snowyu/node-abstract-iterator",
   "main": "./index",
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "abstract-object": "1.x",
-    "minimatch": "~2.0.1"
+    "minimatch": "~2.0.1",
+    "xtend": "~4.0.0"
   },
   "devDependencies": {
     "chai": "~1.10.0",
