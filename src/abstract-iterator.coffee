@@ -90,7 +90,11 @@ module.exports = class AbstractIterator
     if isFunction(options.filter)
       @filter = (item)->
         options.filter item[0], item[1]
+    @encodeOptions options
     options
+
+  encodeOptions: (options)->
+  decodeResult: (result)->
   _next: (callback) ->
     self = this
     if @_nextSync
@@ -140,8 +144,6 @@ module.exports = class AbstractIterator
     @_nexting = false
     return result
 
-  _isOk: (result)->
-    true
   nextSync: ->
     return throw new AlreadyEndError("cannot call next() after end()") if @_ended
     return throw new AlreadyRunError("cannot call next() before previous next() has completed") if @_nexting
@@ -152,6 +154,7 @@ module.exports = class AbstractIterator
       @_nexting = true
       result = @_nextSync()
       if result isnt false
+        @decodeResult result
         if @filter then switch @filter(result)
           when FILTER_EXCLUDED
             # skip this and read the next.
@@ -225,6 +228,7 @@ module.exports = class AbstractIterator
         self._nexting = false
         if !err and (key? or value?)
           result = [key, value]
+          self.decodeResult result
           if self.filter then switch self.filter(result)
             when FILTER_EXCLUDED
               # skip this and read the next.
