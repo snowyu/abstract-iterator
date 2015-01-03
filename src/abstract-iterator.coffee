@@ -137,10 +137,11 @@ module.exports = class AbstractIterator
       @_indexOfKeys++
     result = @_indexOfKeys >= 0 and @_indexOfKeys < @_resultOfKeys.length
     if result
+      result = @_resultOfKeys.slice(@_indexOfKeys, @_indexOfKeys+=2)
+      @decodeResult result
       result =
-        key: @_resultOfKeys[@_indexOfKeys]
-        value: @_resultOfKeys[++@_indexOfKeys]
-      @_indexOfKeys++
+        key: result[0]
+        value: result[1]
     @_nexting = false
     return result
 
@@ -204,6 +205,7 @@ module.exports = class AbstractIterator
       return @
     else if @_indexOfKeys >= 0 and @_indexOfKeys < @_resultOfKeys.length
       result = @_resultOfKeys.slice(@_indexOfKeys, @_indexOfKeys+=2)
+      @decodeResult result
       @_nexting = false
     else
       result = false
