@@ -1,6 +1,6 @@
 {
   "name": "abstract-iterator",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "add the iterator ability to abstract-nosql database.",
   "homepage": "https://github.com/snowyu/node-abstract-iterator",
   "main": "./index",
@@ -62,12 +62,7 @@
     "name": "Riceball LEE",
     "email": "snowyu.lee@gmail.com"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/snowyu/node-abstract-iterator/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/snowyu/node-abstract-iterator/issues"
   }
