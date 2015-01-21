@@ -2,13 +2,12 @@
 # Copyright (c) 2014 Riceball LEE, MIT License
 xtend                 = require("xtend")
 minimatch             = require('minimatch')
-util                  = require("abstract-object/lib/util")
 Errors                = require('abstract-object/Error')
 consts                = require('./consts')
-inherits              = util.inherits
-isArray               = util.isArray
-isString              = util.isString
-isFunction            = util.isFunction
+inherits              = require("abstract-object/lib/util/inherits")
+isArray               = require("abstract-object/lib/util/isArray")
+isString              = require("abstract-object/lib/util/isString")
+isFunction            = require("abstract-object/lib/util/isFunction")
 AbstractError         = Errors.AbstractError
 NotImplementedError   = Errors.NotImplementedError
 InvalidArgumentError  = Errors.InvalidArgumentError
