@@ -102,13 +102,13 @@ module.exports = class AbstractIterator
         try
           result = self._nextSync()
           self._nexting = false
-          if result
-            callback null, result[0], result[1]
-          else
-            callback()
         catch e
           self._nexting = false
           callback e
+        if result
+          callback null, result[0], result[1]
+        else
+          callback()
 
     else
       setImmediate ->
