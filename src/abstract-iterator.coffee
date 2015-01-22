@@ -10,6 +10,7 @@ isString              = require("abstract-object/lib/util/isString")
 isFunction            = require("abstract-object/lib/util/isFunction")
 AbstractError         = Errors.AbstractError
 NotImplementedError   = Errors.NotImplementedError
+NotFoundError         = Errors.NotFoundError
 InvalidArgumentError  = Errors.InvalidArgumentError
 createError           = Errors.createError
 AlreadyEndError       = createError("AlreadyEnd", 0x53)
@@ -107,7 +108,7 @@ module.exports = class AbstractIterator
         if result
           callback null, result[0], result[1]
         else
-          callback()
+          callback(new NotFoundError())
 
     else
       setImmediate ->
