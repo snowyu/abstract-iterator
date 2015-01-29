@@ -108,7 +108,7 @@ module.exports = class AbstractIterator
         if result
           callback null, result[0], result[1]
         else
-          callback(new NotFoundError())
+          callback()
 
     else
       setImmediate ->
