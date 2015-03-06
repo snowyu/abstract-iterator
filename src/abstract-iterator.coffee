@@ -2,12 +2,14 @@
 # Copyright (c) 2014 Riceball LEE, MIT License
 xtend                 = require("xtend")
 minimatch             = require('minimatch')
-Errors                = require('abstract-object/Error')
+Errors                = require('abstract-error')
 consts                = require('./consts')
-inherits              = require("abstract-object/lib/util/inherits")
-isArray               = require("abstract-object/lib/util/isArray")
-isString              = require("abstract-object/lib/util/isString")
-isFunction            = require("abstract-object/lib/util/isFunction")
+inherits              = require("inherits-ex")
+isArray               = require("util-ex/lib/is/type/array")
+isString              = require("util-ex/lib/is/type/string")
+isFunction            = require("util-ex/lib/is/type/function")
+isBuffer              = require("util-ex/lib/is/type/buffer")
+
 AbstractError         = Errors.AbstractError
 NotImplementedError   = Errors.NotImplementedError
 NotFoundError         = Errors.NotFoundError
@@ -15,7 +17,6 @@ InvalidArgumentError  = Errors.InvalidArgumentError
 createError           = Errors.createError
 AlreadyEndError       = createError("AlreadyEnd", 0x53)
 AlreadyRunError       = createError("AlreadyRun", 0x54)
-isBuffer              = Buffer.isBuffer
 
 FILTER_INCLUDED = consts.FILTER_INCLUDED
 FILTER_EXCLUDED = consts.FILTER_EXCLUDED
