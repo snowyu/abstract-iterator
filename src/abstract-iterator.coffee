@@ -106,15 +106,17 @@ module.exports = class AbstractIterator
         catch e
           self._nexting = false
           callback e
+          return
         if result
           callback null, result[0], result[1]
         else
           callback()
-
+        return
     else
       setImmediate ->
         self._nexting = false
         callback()
+        return
 
 
   _end: (callback) ->
