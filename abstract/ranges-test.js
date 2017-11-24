@@ -80,6 +80,7 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
     })
   })
 
+/*
   test('test full data collection but skip first one', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, gt:null}), function (err, data) {
       t.error(err)
@@ -100,7 +101,7 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
       t.end()
     })
   })
-
+*/
   test('test iterator with range keys: ["15", "03", "99"]', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, range: ["15", "03", "99"] }), function (err, data) {
       t.error(err)
@@ -174,7 +175,7 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
       t.end()
     })
   })
-  test('test iterator with range [30,70]', function (t) { 
+  test('test iterator with range [30,70]', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, range: '[30,70]' }), function (err, data) {
       t.error(err)
       t.equal(data.length, 41, 'correct number of entries')
@@ -194,7 +195,7 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
     })
   })
 
-  test('test iterator with range "(30,70)"', function (t) { 
+  test('test iterator with range "(30,70)"', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, range: '(30,70)' }), function (err, data) {
       t.error(err)
       t.equal(data.length, 41-2, 'correct number of entries')
@@ -214,7 +215,7 @@ module.exports.iterator = function (NoSqlDatabase, test, testCommon, collectEntr
     })
   })
 
-  test('test iterator with range "(30,70]"', function (t) { 
+  test('test iterator with range "(30,70]"', function (t) {
     collectEntries(db.iterator({ keyAsBuffer: false, valueAsBuffer: false, range: '(30,70]' }), function (err, data) {
       t.error(err)
       t.equal(data.length, 41-1, 'correct number of entries')
