@@ -1,12 +1,12 @@
-### AbstractIterator [![Build Status](https://img.shields.io/travis/snowyu/node-abstract-iterator/master.svg)](http://travis-ci.org/snowyu/node-abstract-iterator) [![npm](https://img.shields.io/npm/v/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator) [![downloads](https://img.shields.io/npm/dm/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator) [![license](https://img.shields.io/npm/l/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator) 
+### AbstractIterator [![Build Status](https://img.shields.io/travis/snowyu/abstract-iterator/master.svg)](http://travis-ci.org/snowyu/abstract-iterator) [![npm](https://img.shields.io/npm/v/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator) [![downloads](https://img.shields.io/npm/dm/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator) [![license](https://img.shields.io/npm/l/abstract-iterator.svg)](https://npmjs.org/package/abstract-iterator)
 
 
 Add the iterator ability to the [abstract-nosql](https://github.com/snowyu/abstract-nosql) database.
 
 * AbstractIterator(db[, options])
-  * db: Provided with the current instance of [AbstractNoSql](https://github.com/snowyu/node-abstract-nosql).
+  * db: Provided with the current instance of [AbstractNoSql](https://github.com/snowyu/abstract-nosql).
   * options object(note: some options depend on the implementation of the Iterator)
-    * db: the same with the db argument
+    * `db`: the same with the db argument
     * `'next'`: the raw key data to ensure the readStream return keys is greater than the key. See `'last'` event.
       * note: this will affect the range[gt/gte or lt/lte(reverse)] options.
     * `'filter'` *(function)*: to filter data in the stream
@@ -31,20 +31,20 @@ Add the iterator ability to the [abstract-nosql](https://github.com/snowyu/abstr
     * `'match'` *(string)*: use the minmatch to match the specified keys.
       * Note: It will affect the range[gt/gte or lt/lte(reverse)] options maybe.
     * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
-    * `'reverse'` *(boolean, default: `false`)*: a boolean, set true and the stream output will be reversed. 
+    * `'reverse'` *(boolean, default: `false`)*: a boolean, set true and the stream output will be reversed.
     * `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property.
     * `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property.
 
 * next([callback]):
 * nextSync():
+* free():
+* freeSync():
 * end([callback]):
   * it's the alias for free method() to keep comaptiable with abstract-leveldown.
 * endSync():
   * it's the alias for freeSync method() to keep comaptiable with abstract-leveldown.
-* free():
-* freeSync():
 
-The following methods need to be implemented:
+The following internal methods need to be implemented:
 
 ## Sync methods:
 

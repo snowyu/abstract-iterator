@@ -2,7 +2,7 @@
   "name": "abstract-iterator",
   "version": "3.0.0",
   "description": "add the iterator ability to abstract-nosql database.",
-  "homepage": "https://github.com/snowyu/node-abstract-iterator",
+  "homepage": "https://github.com/snowyu/abstract-iterator",
   "main": "./index",
   "files": [
     "README.md",
@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/snowyu/node-abstract-iterator"
+    "url": "https://github.com/snowyu/abstract-iterator"
   },
   "keywords": [
     "abstract",
@@ -64,6 +64,6 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snowyu/node-abstract-iterator/issues"
+    "url": "https://github.com/snowyu/abstract-iterator/issues"
   }
 }
