@@ -35,8 +35,9 @@ Add the iterator ability to the [abstract-nosql](https://github.com/snowyu/abstr
     * `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property.
     * `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property.
 
-* next([callback]):
-* nextSync():
+* next(callback): get the next key/value in the iterator async.
+  * callback(err, key, value)
+* nextSync(): return the next `{key, value}` object in the iterator.
 * free():
 * freeSync():
 * end([callback]):
