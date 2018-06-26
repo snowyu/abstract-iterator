@@ -183,12 +183,12 @@ module.exports = class AbstractIterator
   _endKeys: ->
     delete @_resultOfKeys
     @_indexOfKeys = -2
-    @_ended = true
+    # @_ended = true
 
   freeSync: ->
     if @_indexOfKeys?
-      return @_endKeys()
-    else if @_endSync
+      @_endKeys()
+    if @_endSync
       @_ended = true
       return @_endSync()
     else
@@ -255,8 +255,6 @@ module.exports = class AbstractIterator
     return callback(new AlreadyEndError("end() already called on iterator"))  if @_ended
     if @_indexOfKeys?
       @_endKeys()
-      setImmediate callback
-    else
-      @_ended = true
-      @_end callback
+    @_ended = true
+    @_end callback
   end: @::free
