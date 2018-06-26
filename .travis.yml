@@ -6,8 +6,11 @@ node_js:
   - "6"
   - "7"
   - "8"
+  - "9"
+  - "10"
 before_install:
   - npm install -g grunt-cli
+after_install:
   - npm install coffee-script
 before_script: grunt build
 notifications:
